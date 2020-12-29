@@ -1,0 +1,7 @@
+*.swp
+cronlog.txt
+env.sh
+env.json
+v/
+**/__pycache__/
+*.pyc

@@ -1,0 +1,8 @@
+.eslintcache
+build/
+node_modules/
+v/
+nohup.out
+env.json
+env.sh
+
