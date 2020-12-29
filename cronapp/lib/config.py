@@ -13,7 +13,7 @@ ARP_EXE = conf['ARP_EXE']
 IFCONFIG_EXE = conf['IFCONFIG_EXE']
 SUBNET = conf['SUBNET']
 BLACKLIST_STRING = conf['BLACKLIST']
-LAMBDA_GET_FUNCTION = conf['LAMBDA_GET_FUNCTION_NAME']
+API_HOST = conf['API_HOST']
 
 prefix_octets = [x for x in SUBNET.split('.') if x]
 BLACKLIST = set([PFSENSE_HOST] + BLACKLIST_STRING.split(','))

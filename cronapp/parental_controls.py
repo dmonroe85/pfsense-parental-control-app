@@ -11,7 +11,7 @@ from lib.pfsense import build_descr, \
                         build_new_rules, \
                         create_filter_rule_patch
 from lib.config import PFSENSE_HOST, apikey, apisecret
-from lib.aws import get_overrides
+from lib.ov import get_overrides
 
 
 def main():

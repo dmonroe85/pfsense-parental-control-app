@@ -1,35 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import AWS from 'aws-sdk';
 import axios from 'axios';
 import AppTable from './AppTable'
 
 import Button from '@material-ui/core/Button';
 
-
-// APIs
-AWS.config.region = 'us-east-1'; // Region
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID
-});
-
-const lambda = new AWS.Lambda();
-
-const pullParams = {
-  FunctionName : process.env.REACT_APP_GET_FUNCTION_NAME,
-  InvocationType : 'RequestResponse',
-  LogType : 'None'
-};
-
-const pushParams = (payload) => {
-  return {
-    FunctionName : process.env.REACT_APP_SET_FUNCTION_NAME,
-    InvocationType : 'RequestResponse',
-    LogType : 'None',
-    Payload: JSON.stringify(payload)
-  }
-}
-
+// API
 const host = process.env.REACT_APP_API_HOST
 
 // App Component
@@ -44,14 +20,10 @@ export default function App() {
       .then(r => setBlocked(r.data))
       .catch(e => console.log(e))
 
-    console.log("Invoking Lambda")
-    lambda.invoke(pullParams, function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        setOverrideConfig(JSON.parse(JSON.parse(data.Payload)));
-      }
-    });
+    console.log("Requesting Override Config")
+    axios.get(host + '/get_config')
+      .then(r => setOverrideConfig(r.data))
+      .catch(e => console.log(e))
   }, [])
 
   const appProps = { overrideConfig, setOverrideConfig, blocked };
@@ -64,15 +36,11 @@ export default function App() {
         variant="contained"
         color="secondary"
         onClick={() => {
-          console.log("Invoking Lambda with payload:")
+          console.log("Writing Config payload:")
           console.log(overrideConfig)
-          lambda.invoke(pushParams(overrideConfig), function(err, data) {
-            if (err) {
-              console.log(err);
-            } else {
-              alert("Successfully pushed new config");
-            }
-          });
+          axios.put(host + '/set_config', overrideConfig)
+            .then(r => alert("Successfully pushed new config"))
+            .catch(e => console.log(e))
         }}
       >
         SUBMIT
